@@ -1,0 +1,73 @@
+package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
+import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OARequest;
+
+import java.lang.reflect.Modifier;
+
+/**
+ * Created by ZhangKong on 2015/6/15.
+ */
+public class OALoginRequest extends OARequest {
+
+    private static final String PATH_OA_LOGIN = "/MobileOfficeAutomationAPI/LoginWeb.ashx";
+
+    public static final String PATH_JIUAN = PATH_ROOT_JIUAN + PATH_OA_LOGIN;
+
+    public static final String PATH_JIUAN_TEST = PATH_ROOT_JIUAN_TEST + PATH_OA_LOGIN;
+
+    public static final String PATH_BLOOMSKY = PATH_ROOT_BLOOMSKY + PATH_OA_LOGIN;
+
+    private String account;
+
+    private String password;
+
+    @Override
+    public String getContent() {
+        OALoginRequestBody obj = new OALoginRequestBody();
+        obj.setAccount(account);
+        obj.setPassword(password);
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.STATIC)
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+        return gson.toJson(obj);
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    private class OALoginRequestBody {
+
+        @SerializedName("LogonName")
+        private String account;
+
+        @SerializedName("PassWord")
+        private String password;
+
+        public String getAccount() {
+            return account;
+        }
+
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+    }
+
+}

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectModuleManager">
-    <modules />
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndonContact.iml" filepath="$PROJECT_DIR$/AndonContact.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/loginhttplibrary/loginhttplibrary.iml" filepath="$PROJECT_DIR$/loginhttplibrary/loginhttplibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oahttplibrary/oahttplibrary.iml" filepath="$PROJECT_DIR$/oahttplibrary/oahttplibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oahttpprotocollibrary/oahttpprotocollibrary.iml" filepath="$PROJECT_DIR$/oahttpprotocollibrary/oahttpprotocollibrary.iml" />
+    </modules>
   </component>
 </project>
 

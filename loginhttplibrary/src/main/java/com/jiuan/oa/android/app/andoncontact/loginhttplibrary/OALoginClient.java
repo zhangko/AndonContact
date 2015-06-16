@@ -1,0 +1,69 @@
+package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+
+import android.content.Context;
+
+import com.loopj.android.http.RequestHandle;
+
+import com.jiuan.oa.android.app.andoncontact.oahttplibrary.HeadInfo;
+import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAClient;
+import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAServer;
+
+
+/**
+ * Created by ZhangKong on 2015/6/15.
+ */
+public class OALoginClient {
+    private OALoginClient() {
+
+    }
+
+    @Deprecated
+    public static RequestHandle requestLogin(Context context, String account, String password, OALoginHttpResponseHandler responseHandler, boolean isTest) {
+        OALoginRequest helper = new OALoginRequest();
+        HeadInfo.Builder builder = new HeadInfo.Builder(context).account(account);
+        helper.setHeadInfo(builder.build());
+        helper.setAccount(account);
+        helper.setPassword(password);
+
+        OAClient client = OAClient.getInstance();
+        client.setSSLSocketFactory();
+
+        String path = OALoginRequest.PATH_JIUAN_TEST;
+        if (!isTest) {
+            path = OALoginRequest.PATH_JIUAN;
+        }
+
+        return client.post(context, helper.getPathWithHeadInfo(path), helper.getRequestParams(), responseHandler);
+    }
+
+    public static RequestHandle requestLogin(Context context, String account, String password, OALoginHttpResponseHandler responseHandler, int server) {
+        OALoginRequest helper = new OALoginRequest();
+        HeadInfo.Builder builder = new HeadInfo.Builder(context).account(account);
+        helper.setHeadInfo(builder.build());
+        helper.setAccount(account);
+        helper.setPassword(password);
+
+        OAClient client = OAClient.getInstance();
+        client.setSSLSocketFactory();
+
+        String path = "";
+        switch (server) {
+            case OAServer.JIUAN:
+                path = OALoginRequest.PATH_JIUAN;
+                break;
+            case OAServer.JIUAN_TEST:
+                path = OALoginRequest.PATH_JIUAN_TEST;
+                break;
+            case OAServer.BLOOMSKY:
+                path = OALoginRequest.PATH_BLOOMSKY;
+                break;
+        }
+
+        return client.post(context, helper.getPathWithHeadInfo(path), helper.getRequestParams(), responseHandler);
+    }
+
+    public static void cancelRequests(Context context, boolean mayInterruptIfRunning) {
+        OAClient.getInstance().cancelRequests(context, mayInterruptIfRunning);
+    }
+
+}
