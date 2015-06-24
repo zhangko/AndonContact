@@ -1,4 +1,4 @@
-package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+package com.jiuan.oa.android.library.http.login;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by ZhangKong on 2015/6/15.
+ * 所有和OA相关的系统,统一采用该类接收登录响应.
  */
 public class OALoginResponse implements Parcelable {
 

@@ -1,18 +1,15 @@
-package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+package com.jiuan.oa.android.library.http.login;
 
 import android.content.Context;
 
-import com.loopj.android.http.RequestHandle;
 
 import com.jiuan.oa.android.app.andoncontact.oahttplibrary.HeadInfo;
 import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAClient;
 import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAServer;
+import com.loopj.android.http.RequestHandle;
 
-
-/**
- * Created by ZhangKong on 2015/6/15.
- */
 public class OALoginClient {
+
     private OALoginClient() {
 
     }

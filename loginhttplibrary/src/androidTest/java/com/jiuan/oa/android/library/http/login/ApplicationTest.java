@@ -1,4 +1,4 @@
-package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+package com.jiuan.oa.android.library.http.login;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

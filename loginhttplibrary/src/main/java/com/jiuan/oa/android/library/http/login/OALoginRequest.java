@@ -1,4 +1,4 @@
-package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+package com.jiuan.oa.android.library.http.login;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -8,9 +8,6 @@ import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OARequest;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Created by ZhangKong on 2015/6/15.
- */
 public class OALoginRequest extends OARequest {
 
     private static final String PATH_OA_LOGIN = "/MobileOfficeAutomationAPI/LoginWeb.ashx";

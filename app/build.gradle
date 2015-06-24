@@ -17,6 +17,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        /**测试版(需要配合商城使用)*/
+        jiuantest {
+            applicationId 'com.jiuan.oa.android.app.andoncontact.test'
+            versionName '1.0-jiuan-test'
+        }
+        /**JIUAN正式版(需要配合商城使用)*/
+        jiuan {
+            applicationId 'com.jiuan.oa.android.app.andoncontact'
+            versionName '1.0-jiuan'
+        }
+        /**BLOOMSKY正式版(需要配合商城使用)*/
+        bloomsky {
+            applicationId 'com.jiuan.oa.android.app.andoncontact.bloomsky'
+            versionName '1.0-bloomsky'
+        }
+    }
 }
 
 dependencies {
@@ -25,4 +42,5 @@ dependencies {
     compile project(':loginhttplibrary')
     compile project(':oahttplibrary')
     compile project(':oahttpprotocollibrary')
+    compile files('libs/pinyin4j-2.5.0.jar')
 }

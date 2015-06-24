@@ -1,26 +1,23 @@
-package com.jiuan.oa.android.app.andoncontact.loginhttplibrary;
+package com.jiuan.oa.android.library.http.login;
 
 import android.util.Log;
 
 
 import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAHttpResponseHandler;
 
-/**
- * Created by ZhangKong on 2015/6/15.
- */
 public class OALoginHttpResponseHandler extends OAHttpResponseHandler {
 
     // 用户名或密码错误
-    private static final String FAILURE_201 = "201";
+    public static final String FAILURE_201 = "201";
 
     // 用户名不可以为空
-    private static final String FAILURE_201_3 = "201.3";
+    public static final String FAILURE_201_3 = "201.3";
 
     // 密码不可以为空
-    private static final String FAILURE_201_4 = "201.4";
+    public static final String FAILURE_201_4 = "201.4";
 
     // 用户已离职
-    private static final String FAILURE_202 = "202";
+    public static final String FAILURE_202 = "202";
 
     @Override
     public void onOASuccess(String value) {
