@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
@@ -37,6 +38,13 @@ import com.jiuan.oa.android.app.andoncontact.database.MyDBHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+import greendao.DaoMaster;
+import greendao.DaoSession;
+import greendao.Department;
+import greendao.DepartmentDao;
+import greendao.StaffDao;
+
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -51,30 +59,33 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    private MyDBHelper myhelper;
 
-    public List<String> companyID = null;
+
+    public List<String> companyID ;
+
+    private SQLiteDatabase db;
+
+    private DaoSession daoSession;
+
+    private DepartmentDao departmentDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myhelper = new MyDBHelper(this);
-        companyID = new ArrayList<String>();
-        Cursor companycursor = myhelper.companyquery("companytable");
-        if(companycursor.moveToFirst()){
-            boolean firstflag = true;
-            while (firstflag){
-                Log.v("MSG",companycursor.getString(1));
-               companyID.add(companycursor.getString(2));
-                Log.v("MSG",companycursor.getString(1) + "    " +  companycursor.getString(2));
-                firstflag = companycursor.moveToNext();
-            }
-        }
 
-        if(companycursor != null){
-            companycursor.close();
+        DaoMaster.DevOpenHelper myhelper = new DaoMaster.DevOpenHelper(this,"address.db",null);
+        db = myhelper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        departmentDao = daoSession.getDepartmentDao();
+        QueryBuilder qb = departmentDao.queryBuilder().where(DepartmentDao.Properties.IsCompany.eq(1));
+        List<Department> list = qb.list();
+        Log.d("公司总数"," " + list.size());
+        companyID = new ArrayList<String>();
+        for(int i = 0; i < list.size(); i++){
+            companyID.add(list.get(i).getDepartmentID());
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

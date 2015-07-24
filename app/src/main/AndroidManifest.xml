@@ -38,6 +38,8 @@
 
         </activity>
 
+        <activity android:name=".TestActivity"></activity>
+
         <receiver
             android:name=".receiver.LoginReceiver"
             android:permission="com.jiuan.oa.android.library.protocol.login.permission.BROADCAST">

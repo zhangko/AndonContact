@@ -5,9 +5,15 @@
         app:showAsAction="withText|ifRoom"
         android:icon="@android:drawable/ic_menu_search"/>
 
-        <item android:id="@+id/action_config"
-            android:title="关于"
-            app:showAsAction = "never"/>
+
+
+    <item android:id="@+id/action_upgrade"
+        android:title="更新数据库"
+        app:showAsAction = "never"/>
+
+    <item android:id="@+id/action_change"
+        android:title="修改电话"
+        app:showAsAction = "never"/>
     <item android:id="@+id/action_quit"
         android:title="退出"
         app:showAsAction = "never"/>

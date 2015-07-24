@@ -5,64 +5,34 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OARequest;
-import com.jiuan.oa.android.app.andoncontact.oahttplibrary.OAServer;
 
 import java.lang.reflect.Modifier;
 
 /**
- * Created by ZhangKong on 2015/6/16.
+ * Created by ZhangKong on 2015/7/17.
  */
-public class ContactRequest extends OARequest{
-    public static String PATH_DEPARTMENT;
-
-    public static String PATH_LOGIN;
-
-    public static String PATH_EMPLOYEE;
-
-    public static String PATH_CHANGE_TELEPHONE;
-
-    private static final String DEPARTMENT = "/HumanResourcesAPI/DepartmentWeb.ashx";
-
-    private static final String EMPLOYEE = "/HumanResourcesAPI/EmployeeWeb.ashx";
-
-    private static final String LOGIN = "/MobileOfficeAutomationAPI/LoginWeb.ashx";
-
-    private static final String CHANGE_TELEPHONE = "/MobileOfficeAutomationAPI/UpdateMobilePhoneWeb.ashx";
-
-    // 添加发送小米推送token的地址
- //   public static final String TOKEN = "/MobileOfficeAutomationAPI/RegisteredToken.ashx";
-
-    static {
-        String url = "";
-        switch (Flavors.SERVER_TYPE) {
-            case OAServer.JIUAN:
-                url = PATH_ROOT_JIUAN;
-                break;
-            case OAServer.JIUAN_TEST:
-                url = PATH_ROOT_JIUAN_TEST;
-                break;
-            case OAServer.BLOOMSKY:
-                url = PATH_ROOT_BLOOMSKY;
-                break;
-        }
-        PATH_DEPARTMENT = url + DEPARTMENT;
-        PATH_EMPLOYEE =url + EMPLOYEE;
-        PATH_LOGIN = url + LOGIN;
-        PATH_CHANGE_TELEPHONE = url + CHANGE_TELEPHONE;
-    }
+public class ChangeNumberRequest extends OARequest {
     @Override
     public String getContent() {
         InfoRequestBody obj = new InfoRequestBody();
         obj.setUserID(userID);
         obj.setAccessKey(accessKey);
+        obj.setMobileNumber(mobileNumber);
+        obj.setTimeStamp(timeStamp);
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithModifiers(Modifier.STATIC)
                 .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
         return gson.toJson(obj);
     }
+
     private String userID;
 
     private String accessKey;
+
+    private String timeStamp;
+
+    private String mobileNumber;
+
     public String getUserID() {
         return userID;
     }
@@ -78,6 +48,23 @@ public class ContactRequest extends OARequest{
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
     }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     private class InfoRequestBody {
 
         @SerializedName("OAfUserID")
@@ -85,6 +72,12 @@ public class ContactRequest extends OARequest{
 
         @SerializedName("AccessKey")
         private String accessKey;
+
+        @SerializedName("TS")
+        private String timeStamp;
+
+        @SerializedName("MobileNumber")
+        private String mobileNumber;
 
         public String getUserID() {
             return userID;
@@ -102,6 +95,20 @@ public class ContactRequest extends OARequest{
             this.accessKey = accessKey;
         }
 
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+        }
 
+        public void setTimeStamp(String timeStamp) {
+            this.timeStamp = timeStamp;
+        }
+
+        public String getMobileNumber() {
+            return mobileNumber;
+        }
+
+        public String getTimeStamp() {
+            return timeStamp;
+        }
     }
 }

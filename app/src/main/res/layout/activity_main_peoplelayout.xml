@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:background="@android:color/holo_blue_light"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_menu_revert"
+            android:id="@+id/returnbutton"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="人员信息"
+           android:textColor="#fff"
+            android:textSize="20dp"
+            android:id="@+id/peopleinfo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="20dp"
+            android:text=""
+            android:textSize="45dp"
+            android:textColor="#ffffff"
+            android:id="@+id/employeename"/>
+        </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:id="@+id/lineitem">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/hello"
+                    android:text="电话"
+                    android:textSize="20dp"/>
+
+                <FrameLayout
+                    android:layout_width="128dp"
+                    android:layout_height="2dp"
+                    android:background="@android:color/holo_blue_dark"
+                    android:layout_below="@id/hello"
+                    android:id="@+id/line"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+
+                android:layout_below="@+id/lineitem">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暂无"
+                    android:layout_centerVertical="true"
+                    android:textSize="18dp"
+                    android:id="@+id/mobile"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/edit"
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/edit"
+                   />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:layout_toLeftOf="@+id/edit"
+                    android:background="@android:color/transparent"
+                   android:src="@drawable/duanxin"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/message"
+                    android:layout_margin="20dp"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:background="@android:color/transparent"
+                    android:src="@drawable/telephone"
+                    android:id="@+id/callphone"
+                    android:layout_toLeftOf="@+id/message"
+                    android:layout_centerVertical="true"/>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lineitem1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hello1"
+                android:text="其他"
+                android:textSize="20dp"/>
+
+            <FrameLayout
+                android:layout_width="128dp"
+                android:layout_height="2dp"
+                android:background="@android:color/holo_blue_dark"
+                android:layout_below="@id/hello1"
+                android:id="@+id/line1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/line1"
+                android:id="@+id/code_layout">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="工号："
+                    android:textSize="18dp"
+                    android:layout_below="@+id/line1"
+                    android:layout_marginBottom="5dp"
+                    />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/code"
+
+                    android:textSize="18dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/code_layout">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="邮箱："
+                    android:textSize="18dp"
+                    android:layout_marginBottom="5dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/email"
+
+                    android:textSize="18dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

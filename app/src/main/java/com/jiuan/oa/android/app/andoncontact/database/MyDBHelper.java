@@ -6,6 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.jiuan.oa.android.app.andoncontact.convertpinyin.HanziToPinyin;
+import com.jiuan.oa.android.app.andoncontact.response.DepartmentResponse;
+import com.jiuan.oa.android.app.andoncontact.response.EmployResponse;
+
+import java.util.List;
+
 /**
  * Created by ZhangKong on 2015/6/17.
  */
@@ -34,6 +40,61 @@ public class MyDBHelper extends SQLiteOpenHelper {
     public void insert(String tablename,ContentValues values){
         SQLiteDatabase db = getWritableDatabase();
         db.insert(tablename,null,values);
+    }
+
+    public void insert(String tablename,List<EmployResponse> employlist){
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try{
+            //员工总数
+            int index = employlist.size();
+            for(int i = 0; i< index; i++){
+                EmployResponse employResponse = employlist.get(i);
+                ContentValues values = new ContentValues();
+                values.put("Name", employResponse.getName());
+                values.put("Code", employResponse.getCode());
+                values.put("ID", employResponse.getId());
+                values.put("DepartmentID", employResponse.getDepartmentid());
+                values.put("DepartmentCode", employResponse.getDepartmentcode());
+                values.put("Mobile", employResponse.getMobile());
+                values.put("Telephone", employResponse.getTelephone());
+                values.put("Email", employResponse.getEmail());
+                values.put("FullName", HanziToPinyin.getFullPinYin(employResponse.getName()));
+                values.put("ShortName", HanziToPinyin.getPinyin(employResponse.getName()));
+                values.put("Sex", employResponse.getSex());
+                db.insert(tablename,null,values);
+            }
+            db.setTransactionSuccessful();
+
+        }finally {
+            db.endTransaction();
+        }
+
+    }
+
+    public void insertCompany(String tablename,List<DepartmentResponse> departmentResponseList){
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try{
+            //员工总数
+            int index = departmentResponseList.size();
+            for(int i = 0; i< index; i++){
+               DepartmentResponse departmentResponse = departmentResponseList.get(i);
+                ContentValues values = new ContentValues();
+                values.put("Name", departmentResponse.getName());
+                values.put("Code", departmentResponse.getCode());
+                values.put("ID", departmentResponse.getId());
+                values.put("ParentID", departmentResponse.getParentid());
+                values.put("Abbre", departmentResponse.getAbbreviation());
+                values.put("IsCompany", departmentResponse.getIscompany());
+                db.insert(tablename,null,values);
+            }
+            db.setTransactionSuccessful();
+
+        }finally {
+            db.endTransaction();
+        }
+
     }
     public Cursor query(String tablename){
         SQLiteDatabase db = getReadableDatabase();

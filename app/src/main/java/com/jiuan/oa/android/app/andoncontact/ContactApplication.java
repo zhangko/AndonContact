@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jiuan.oa.android.app.andoncontact.convertpinyin.HanziToPinyin;
@@ -25,10 +26,18 @@ import java.util.List;
 public class ContactApplication extends Application {
     public static final String LOGIN_PREFERENCES = "login_preferences";
     private MyDBHelper myhelper;
+
+    private static ContactApplication appContext;
     @Override
     public void onCreate() {
         super.onCreate();
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                        .build());
         Log.d("InfoApplication", "onCreate");
+        appContext = this;
 
 
     }
@@ -65,6 +74,22 @@ public class ContactApplication extends Application {
         prefsEditor.clear().apply();
     }
 
+    public void cleanInfo(){
+        SharedPreferences preferences = getSharedPreferences(LOGIN_PREFERENCES,Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = preferences.edit();
+        prefsEditor.clear().apply();
+    }
+
+    /**
+     * 清理登陆的相关信息
+     */
+
+    public  void cleanLoginInfo(){
+        SharedPreferences preferences = getSharedPreferences("config",Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = preferences.edit();
+        prefsEditor.clear().apply();
+    }
+
     /**
      * 注销并退出
      * 人员信息为空,accessKey过期,
@@ -72,6 +97,10 @@ public class ContactApplication extends Application {
     public static void logoutAndExit(Activity activity) {
         LoginUtils.startLoginActivity(activity, LoginProtocol.REQUEST_LOGOUT, Flavors.SERVER_TYPE);
         activity.finish();
+    }
+
+    public static ContactApplication getInstance() {
+        return appContext;
     }
 
 

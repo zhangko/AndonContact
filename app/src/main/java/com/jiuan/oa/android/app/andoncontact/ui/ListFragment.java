@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -29,6 +30,14 @@ import com.jiuan.oa.android.app.andoncontact.database.MyDBHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+import greendao.DaoMaster;
+import greendao.DaoSession;
+import greendao.Department;
+import greendao.DepartmentDao;
+import greendao.Staff;
+import greendao.StaffDao;
+
 /**
  * Created by ZhangKong on 2015/6/18.
  */
@@ -48,7 +57,17 @@ public class ListFragment extends Fragment {
     private TreeViewAdapter adapter = null;
     private MyDBHelper myhelper;
 
-    private List<String> companyID;
+    private List<String> companyID = new ArrayList<String>();
+
+    private SQLiteDatabase db;
+
+    private DaoSession daoSession;
+
+    private DaoSession staffDaoSession;
+
+    private DepartmentDao departmentDao;
+
+    private StaffDao staffDao;
 
     public void ListFragment(){
 
@@ -105,42 +124,41 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        companyID = new ArrayList<String>();
-        Cursor companycursor = myhelper.companyquery("companytable");
-        if(companycursor.moveToFirst()){
-            boolean firstflag = true;
-            while (firstflag){
-                Log.v("MSG", companycursor.getString(1));
-                companyID.add(companycursor.getString(2));
-                Log.v("MSG",companycursor.getString(1) + "    " +  companycursor.getString(2));
-                firstflag = companycursor.moveToNext();
-            }
-        }
+        DaoMaster.DevOpenHelper myhelper = new DaoMaster.DevOpenHelper(getActivity(),"address.db",null);
+        db = myhelper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        staffDaoSession = daoMaster.newSession();
+        staffDao = staffDaoSession.getStaffDao();
+        departmentDao = daoSession.getDepartmentDao();
+        QueryBuilder qb = departmentDao.queryBuilder().where(DepartmentDao.Properties.IsCompany.eq(1));
+        List<Department> list = qb.list();
+        Log.d("一共有总司数："," " + list.size());
 
-        if(companycursor != null){
-            companycursor.close();
+        for(int i = 0; i < list.size(); i++){
+            companyID.add(list.get(i).getDepartmentID());
+            Log.d("MSG"," " + list.get(i).getDepartmentID());
         }
       String departmentid = companyID.get(getArguments().getInt(ARG_SECTION_NUMBER));
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        // 一级部门的游标 firstcursor
-        Cursor firstcursor = myhelper.query("companytable",departmentid);
-        if(firstcursor.moveToFirst()){
-            boolean firstflag = true;
-            while(firstflag){
-                TreeNode tempnode = new TreeNode();
-                tempnode.setName(firstcursor.getString(1));
-                tempnode.setHaveChild(true);
-                tempnode.setLevel(1);
-                tempnode.setExpanded(false);
-                tempnode.setDepartmenID(firstcursor.getString(2));
-                tempnode.setHaveParent(false);
-                tempnode.setID(firstcursor.getString(2));
-                tempnode.setParent("");
-                nodelist.add(tempnode);
-                firstflag = firstcursor.moveToNext();
-            }
+        QueryBuilder department_qb = departmentDao.queryBuilder().where(DepartmentDao.Properties.ParentID.eq(departmentid));
+
+        List<Department> first_department = new ArrayList<Department>();
+        first_department = department_qb.list();
+        for(int i = 0; i < first_department.size();i++){
+            TreeNode tempnode = new TreeNode();
+            tempnode.setName(first_department.get(i).getName());
+            tempnode.setHaveChild(true);
+            tempnode.setLevel(1);
+            tempnode.setExpanded(false);
+            tempnode.setDepartmenID(first_department.get(i).getDepartmentID());
+            tempnode.setHaveParent(false);
+            tempnode.setID(first_department.get(i).getDepartmentID());
+            tempnode.setParent("");
+            nodelist.add(tempnode);
         }
+
         ListView mylistview = (ListView)rootView.findViewById(R.id.treelist);
            adapter = new TreeViewAdapter(getActivity(),R.layout.outline,nodelist);
         mylistview.setAdapter(adapter);
@@ -160,87 +178,65 @@ public class ListFragment extends Fragment {
                         }
                         nodelist.removeAll(temp);
                         adapter.notifyDataSetChanged();
-
-
-
                     }
-                    else{
+                    else {
                         nodelist.get(position).setExpanded(true);
                         int level = nodelist.get(position).getLevel();
                         int nextlevel = level + 1;
-                        Cursor cursor = myhelper.query("companytable",nodelist.get(position).getDepartmenID());
-                        if(cursor.getCount() != 0){
-                            if(cursor.moveToFirst()){
-                                boolean secondflag = true;
-                                int i = 1;
-                                while (secondflag){
-
-                                    TreeNode templistnode = new TreeNode();
-                                    templistnode.setName(cursor.getString(1));
-                                    templistnode.setHaveChild(true);
-                                    templistnode.setLevel(nextlevel);
-                                    templistnode.setExpanded(false);
-                                    templistnode.setDepartmenID(cursor.getString(2));
-                                    templistnode.setHaveParent(true);
-                                    templistnode.setID(cursor.getString(2));
-                                    templistnode.setParent(cursor.getString(2));
-                                    nodelist.add(position + 1 ,templistnode);
-                                    ++i;
-                                    secondflag = cursor.moveToNext();
-                                }
-                            }
-                            Cursor contactcursor = myhelper.contactquery("contacttable",nodelist.get(position).getDepartmenID());
-                            if(contactcursor.moveToFirst()){
-                                boolean contactflag = true;
-                                int i = 1;
-                                while(contactflag){
-                                    TreeNode templistnode = new TreeNode();
-                                    templistnode.setName(contactcursor.getString(1));
-                                    templistnode.setHaveChild(false);
-                                    templistnode.setLevel(nextlevel);
-                                    templistnode.setExpanded(false);
-                                    templistnode.setDepartmenID(contactcursor.getString(4));
-                                    templistnode.setHaveParent(true);
-                                    templistnode.setID(contactcursor.getString(2));
-                                    templistnode.setParent(contactcursor.getString(2));
-                                    templistnode.setCode(contactcursor.getString(2));
-                                    nodelist.add(position + 1 ,templistnode);
-                                    ++i;
-                                    contactflag = contactcursor.moveToNext();
-
-                                }
+                        QueryBuilder second_department_qb = departmentDao.queryBuilder().where(DepartmentDao.Properties.ParentID.eq(nodelist.get(position).getDepartmenID()));
+                        List<Department> list_second_department = second_department_qb.list();
+                        if (list_second_department.size() != 0) {
+                            for (int i = 0; i < list_second_department.size(); i++) {
+                                TreeNode templistnode = new TreeNode();
+                                templistnode.setName(list_second_department.get(i).getName());
+                                templistnode.setHaveChild(true);
+                                templistnode.setLevel(nextlevel);
+                                templistnode.setExpanded(false);
+                                templistnode.setDepartmenID(list_second_department.get(i).getDepartmentID());
+                                templistnode.setHaveParent(true);
+                                templistnode.setID(list_second_department.get(i).getDepartmentID());
+                                templistnode.setParent(list_second_department.get(i).getDepartmentID());
+                                nodelist.add(position + 1, templistnode);
                             }
 
+                        QueryBuilder first_contact_qb = staffDao.queryBuilder().where(StaffDao.Properties.DepartmentID.eq(nodelist.get(position).getDepartmenID()));
+                        List<Staff> first_contact_list = first_contact_qb.list();
+                        for (int i = 0; i < first_contact_list.size(); i++) {
+                            TreeNode templistnode = new TreeNode();
+                            templistnode.setName(first_contact_list.get(i).getName());
+                            templistnode.setHaveChild(false);
+                            templistnode.setLevel(nextlevel);
+                            templistnode.setExpanded(false);
+                            templistnode.setDepartmenID(first_contact_list.get(i).getDepartmentID());
+                            templistnode.setHaveParent(true);
+                            templistnode.setID(first_contact_list.get(i).getCode());
+                            templistnode.setParent(first_contact_list.get(i).getCode());
+                            templistnode.setCode(first_contact_list.get(i).getCode());
+                            nodelist.add(position + 1, templistnode);
                         }
-                        else{
-                            Cursor peoplecursor = myhelper.contactquery("contacttable",nodelist.get(position).getDepartmenID());
-                            if(peoplecursor.moveToFirst()){
-                                boolean peopleflag = true;
-                                int i = 1;
-                                while(peopleflag){
 
-                                    TreeNode templistnode = new TreeNode();
-                                    templistnode.setName(peoplecursor.getString(1));
-                                    templistnode.setHaveChild(false);
-                                    templistnode.setLevel(nextlevel);
-                                    templistnode.setExpanded(false);
-                                    templistnode.setDepartmenID(peoplecursor.getString(4));
-                                    templistnode.setHaveParent(true);
-                                    templistnode.setID(peoplecursor.getString(2));
-                                    templistnode.setParent(peoplecursor.getString(2));
-                                    templistnode.setCode(peoplecursor.getString(2));
-                                    nodelist.add(position + 1 ,templistnode);
-                                    ++i;
-                                    peopleflag = peoplecursor.moveToNext();
-
-                                }
+                        } else{
+                            QueryBuilder second_contact_qb = staffDao.queryBuilder().where(StaffDao.Properties.DepartmentID.eq(nodelist.get(position).getDepartmenID()));
+                            List<Staff> second_contact_list = second_contact_qb.list();
+                            for(int i = 0; i < second_contact_list.size();i++){
+                                TreeNode templistnode = new TreeNode();
+                                templistnode.setName(second_contact_list.get(i).getName());
+                                templistnode.setHaveChild(false);
+                                templistnode.setLevel(nextlevel);
+                                templistnode.setExpanded(false);
+                                templistnode.setDepartmenID(second_contact_list.get(i).getDepartmentID());
+                                templistnode.setHaveParent(true);
+                                templistnode.setID(second_contact_list.get(i).getCode());
+                                templistnode.setParent(second_contact_list.get(i).getCode());
+                                templistnode.setCode(second_contact_list.get(i).getCode());
+                                nodelist.add(position + 1 ,templistnode);
                             }
 
                         }
 
                         adapter.notifyDataSetChanged();
                     }
-                }
+                  }
                 else{
                     String peoplecode = nodelist.get(position).getCode();
                     Intent intent = new Intent(getActivity(),PeopleActivity.class);

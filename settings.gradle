@@ -1,1 +1,1 @@
-include ':app', ':oahttplibrary', ':oahttpprotocollibrary', ':loginhttplibrary'
+include ':app', ':oahttplibrary', ':oahttpprotocollibrary', ':loginhttplibrary', ':MyDaoGenerator'

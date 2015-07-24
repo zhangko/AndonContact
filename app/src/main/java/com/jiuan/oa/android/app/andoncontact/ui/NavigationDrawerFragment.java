@@ -1,7 +1,9 @@
 package com.jiuan.oa.android.app.andoncontact.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -20,12 +22,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jiuan.oa.android.app.andoncontact.R;
 import com.jiuan.oa.android.app.andoncontact.database.MyDBHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
+import greendao.DaoMaster;
+import greendao.DaoSession;
+import greendao.Department;
+import greendao.DepartmentDao;
+import greendao.StaffDao;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -62,7 +77,13 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 1;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-    private MyDBHelper myhelper;
+    private SQLiteDatabase db;
+
+    private DaoSession daoSession;
+
+    private DepartmentDao departmentDao;
+
+    private NavigationAdapter adapter;
 
     public NavigationDrawerFragment() {
     }
@@ -103,10 +124,26 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        myhelper = new MyDBHelper(getActivity());
-        Cursor companycursor = myhelper.companyquery("companytable");
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),android.R.layout.simple_list_item_activated_1,companycursor,new String[]{"Name"},new int[]{android.R.id.text1});
+
+        DaoMaster.DevOpenHelper myhelper = new DaoMaster.DevOpenHelper(getActivity(),"address.db",null);
+        db = myhelper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        departmentDao = daoSession.getDepartmentDao();
+        QueryBuilder qb = departmentDao.queryBuilder().where(DepartmentDao.Properties.IsCompany.eq(1));
+        List<Department> list = qb.list();
+        List<String> name_list = new ArrayList<String>();
+        for(int i = 0; i < list.size(); i++){
+            name_list.add(list.get(i).getName());
+        }
+       // ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,name_list);
+         adapter = new NavigationAdapter(getActivity(),list);
+        adapter.setItemChecked(mCurrentSelectedPosition);
         mDrawerListView.setAdapter(adapter);
+       /* myhelper = new MyDBHelper(getActivity());
+        Cursor companycursor = myhelper.companyquery("companytable");*/
+      /*  SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),android.R.layout.simple_list_item_activated_1,companycursor,new String[]{"Name"},new int[]{android.R.id.text1});
+        mDrawerListView.setAdapter(adapter);*/
 
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -195,6 +232,9 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
+        if(adapter != null){
+            adapter.setItemChecked(position);
+        }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
@@ -261,6 +301,18 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
+        if(item.getItemId() ==R.id.action_change){
+            FireMisslesDialogFragment fireMisslesDialogFragment = new FireMisslesDialogFragment();
+            fireMisslesDialogFragment.show(getActivity().getFragmentManager(),"missles");
+            return true;
+        }
+
+        if(item.getItemId() == R.id.action_upgrade){
+            UpgradeFragment upgradeFragment = new UpgradeFragment();
+            upgradeFragment.show(getActivity().getFragmentManager(),"upgrade");
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -287,5 +339,66 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    private class NavigationAdapter extends BaseAdapter {
+
+        private Context mContext;
+
+        private List<Department> content;
+
+        private int index;
+
+        public NavigationAdapter(Context context, List<Department> text) {
+            mContext = context;
+            content = text;
+        }
+
+        @Override
+        public int getCount() {
+            return content.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder ;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.layout_listview, null);
+               viewHolder.textView = (TextView)convertView.findViewById(R.id.listitem_text);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.textView.setText(content.get(position).getName());
+
+            if (index == position) {
+               convertView.setBackgroundColor(getResources().getColor(R.color.choice_gray));
+            } else {
+                convertView.setBackgroundColor(getResources().getColor(R.color.backgound));
+            }
+
+            return convertView;
+        }
+
+        private class ViewHolder {
+
+            TextView textView;
+        }
+
+        public void setItemChecked(int index) {
+            this.index = index;
+        }
     }
 }
