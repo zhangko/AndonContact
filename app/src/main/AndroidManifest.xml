@@ -52,7 +52,7 @@
         </receiver>
 
         <receiver
-            android:name=".receiver.LogoutReceiver"
+            android:name=".receiver.LogoutReceivers"
             android:permission="com.jiuan.oa.android.app.store.permission.BROADCAST">
             <intent-filter>
                 <action android:name="com.jiuan.oa.android.app.store.Logout" />
