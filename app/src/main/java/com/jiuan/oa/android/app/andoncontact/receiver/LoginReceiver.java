@@ -1,4 +1,4 @@
-package com.jiuan.oa.android.app.andoncontact.test;
+package com.jiuan.oa.android.app.andoncontact.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
