@@ -188,4 +188,25 @@
 
     </android.support.v7.widget.CardView>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="发起会话"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_send_message"
+            android:id="@+id/send_information"/>
+        </RelativeLayout>
+
+
+
+
+
+
 </LinearLayout>

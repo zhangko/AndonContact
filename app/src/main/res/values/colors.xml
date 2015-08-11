@@ -2,4 +2,5 @@
 <resources>
     <color name="choice_gray">#E6E6E6</color>
     <color name="backgound">#ffffff</color>
+    <color name="chat_background">@android:color/transparent</color>
 </resources>

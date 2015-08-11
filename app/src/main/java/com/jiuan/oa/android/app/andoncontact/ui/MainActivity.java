@@ -74,7 +74,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+       Log.d("LIFECYCLE","MainActivity onCreate");
         DaoMaster.DevOpenHelper myhelper = new DaoMaster.DevOpenHelper(this,"address.db",null);
         db = myhelper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);

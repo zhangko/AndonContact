@@ -50,13 +50,15 @@ public class PeopleActivity extends Activity implements View.OnClickListener,Vie
 
     private String code;
 
+    private String staffID;
+
 
 
     private StaffDao staffDao;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_peoplelayout);
-
+         Log.d("LIFECYCLE","onCreate");
 
        code = getIntent().getStringExtra("MSG").toString();
 
@@ -72,11 +74,23 @@ public class PeopleActivity extends Activity implements View.OnClickListener,Vie
 
             name =  list.get(0).getName();
             number = list.get(0).getCode();
+            staffID = list.get(0).getStaffID();
 
             //这个是手机号码
             telephone = list.get(0).getMobile();
             phone =  list.get(0).getTelephone();
             email =  list.get(0).getEmail();
+        // 添加发起会话按钮的相应事件
+        Button send_button = (Button)findViewById(R.id.send_information);
+        send_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PeopleActivity.this,InformationActivity.class);
+                intent.putExtra("name",name);
+                intent.putExtra("staffID",staffID);
+                startActivity(intent);
+            }
+        });
            initView();
 
 
@@ -143,6 +157,8 @@ public class PeopleActivity extends Activity implements View.OnClickListener,Vie
                 ChangeNumberFragment changeNumberFragment = new ChangeNumberFragment();
                 changeNumberFragment.show(getFragmentManager(),"changnumber");
                 break;
+
+
 
         }
     }

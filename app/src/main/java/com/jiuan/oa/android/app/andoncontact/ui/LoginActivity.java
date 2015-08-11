@@ -232,6 +232,7 @@ public class LoginActivity extends ActionBarActivity {
                             Staff staff = new Staff(l);
                             staff.setName(employResponse.getName());
                             staff.setCode(employResponse.getCode());
+                            staff.setStaffID(employResponse.getId());
                             staff.setDepartmentCode(employResponse.getDepartmentcode());
                             staff.setDepartmentID(employResponse.getDepartmentid());
                             staff.setEmail(employResponse.getEmail());
