@@ -335,11 +335,11 @@ public class InformationActivity extends ActionBarActivity implements View.OnCli
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     Log.d("onResponse","  " +  jsonObject.toString());
-                    out.println(send_header);
+                   /* out.println(send_header);
                     out.flush();
                     imMessage.setMessage(chat_information);
                     adapter.addItem(imMessage);
-                    editText.setText("");
+                    editText.setText("");*/
 
                 }
             }, new Response.ErrorListener() {
@@ -349,6 +349,12 @@ public class InformationActivity extends ActionBarActivity implements View.OnCli
                 }
             });
           requestQueue.add(myJsonRequest);
+
+            out.println(send_header);
+            out.flush();
+            imMessage.setMessage(chat_information);
+            adapter.addItem(imMessage);
+            editText.setText("");
 
         }
 
